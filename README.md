@@ -117,17 +117,13 @@ src/
 ├── contexts/
 │   └── LanguageContext.tsx      # Language translator logic
 ├── features/
-│   ├── create-request/
-│   │   ├── model/
-│   │   ├── view/
-│   │   └── viewmodel/
-│   ├── request-flow/
-│   │   ├── model/
-│   │   ├── view/
-│   │   └── viewmodel/
-│   └── visual-progress/
-│       ├── view/
-│       └── viewmodel/
+│   ├── feeds/                   # Main feed and sidebar components
+│   ├── hotlines/                # Emergency hotlines view
+│   ├── leaderboard/             # Volunteer leaderboard view
+│   ├── news/                    # Community news view
+│   ├── post-request/            # Post creation modals
+│   ├── progress/                # SVG lift animations
+│   └── requests/                # Request models and state
 ├── mock/
 │   └── mockRequestsDb.ts        # Static Database
 └── shared-components/
@@ -136,7 +132,7 @@ src/
 
 ### Mock State Store Model Implementation
 ```typescript
-// src/features/request-flow/model/RequestModel.ts
+// src/features/requests/model/RequestModel.ts
 export interface HelpRequest {
   id: string;
   title: string;
@@ -149,7 +145,7 @@ export interface HelpRequest {
 
 ```typescript
 // src/mock/mockRequestsDb.ts
-import type { HelpRequest } from '../features/request-flow/model/RequestModel';
+import type { HelpRequest } from '../features/requests/model/RequestModel';
 
 export const mockRequestsDb: HelpRequest[] = [
   {
