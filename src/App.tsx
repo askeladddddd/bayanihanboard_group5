@@ -120,29 +120,28 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7] transition-opacity duration-500">
-        <div className="flex flex-col items-center gap-8 animate-in slide-in-from-bottom-4 fade-in duration-700">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-br from-[#fdfbf7] via-[#f8f5ee] to-[#e8e0d0]">
+        {/* Ambient glow */}
+        <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-[color:var(--bamboo)]/8 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-[color:var(--nipa)]/8 blur-3xl pointer-events-none" />
+
+        <div className="flex flex-col items-center gap-8">
           <div className="relative w-28 h-28 flex items-center justify-center">
-            {/* Outer spinning ring */}
-            <div className="absolute inset-0 rounded-full border-[4px] border-[color:var(--bamboo)]/20"></div>
-            <div className="absolute inset-0 rounded-full border-[4px] border-[color:var(--bamboo)] border-t-transparent animate-spin"></div>
-            
-            {/* Inner pulsing logo */}
-            <div className="absolute inset-2 bg-white rounded-full p-4 shadow-sm overflow-hidden flex items-center justify-center">
-              <img src={appLogo} alt="Loading Logo" className="w-full h-full object-cover animate-pulse" />
+            {/* SVG spinner - smooth rotation, no jitter */}
+            <svg className="w-full h-full animate-spin" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="44" fill="none" stroke="var(--bamboo)" strokeWidth="4" strokeOpacity="0.15" />
+              <circle cx="50" cy="50" r="44" fill="none" stroke="var(--bamboo)" strokeWidth="4" strokeDasharray="276" strokeDashoffset="69" strokeLinecap="round" />
+            </svg>
+
+            {/* Inner logo */}
+            <div className="absolute inset-2 bg-white/90 rounded-full p-4 shadow-sm overflow-hidden flex items-center justify-center">
+              <img src={appLogo} alt="" className="w-full h-full object-cover" />
             </div>
           </div>
-          
-          <div className="flex flex-col items-center gap-3">
+
+          <div className="flex flex-col items-center gap-2">
             <h2 className="font-display text-3xl font-bold text-[color:var(--bamboo-deep)] tracking-tight">Bayanihan Board</h2>
-            <div className="flex items-center gap-1.5 text-[color:var(--bamboo)]">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] animate-pulse">Loading Community</span>
-              <span className="flex gap-0.5">
-                <span className="w-1 h-1 rounded-full bg-[color:var(--bamboo)] animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                <span className="w-1 h-1 rounded-full bg-[color:var(--bamboo)] animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                <span className="w-1 h-1 rounded-full bg-[color:var(--bamboo)] animate-bounce" style={{ animationDelay: '300ms' }}></span>
-              </span>
-            </div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--bamboo)]/70">Loading Community</p>
           </div>
         </div>
       </div>

@@ -63,30 +63,25 @@ export function PostDetailStandaloneView({ r, onClose, otherRequests, onSelectPo
   if (isNavigating) {
     return (
       <div
-        className="w-full min-h-screen pt-8 flex items-center justify-center animate-in fade-in duration-300 bg-cover bg-center bg-fixed"
+        className="w-full min-h-screen pt-8 flex items-center justify-center bg-cover bg-center bg-fixed"
         style={{ backgroundImage: `url(${mainBackgroundImage})` }}
       >
-        <div className="flex flex-col items-center gap-8 animate-in slide-in-from-bottom-4 fade-in duration-700">
+        <div className="flex flex-col items-center gap-8">
           <div className="relative w-28 h-28 flex items-center justify-center">
-            {/* Outer spinning ring */}
-            <div className="absolute inset-0 rounded-full border-[4px] border-[color:var(--bamboo)]/20"></div>
-            <div className="absolute inset-0 rounded-full border-[4px] border-[color:var(--bamboo)] border-t-transparent animate-spin"></div>
-            
-            {/* Inner pulsing logo */}
-            <div className="absolute inset-2 bg-white rounded-full p-4 shadow-sm overflow-hidden flex items-center justify-center">
-              <img src={appLogo} alt="Loading Logo" className="w-full h-full object-cover animate-pulse" />
+            {/* SVG spinner - smooth rotation, no jitter */}
+            <svg className="w-full h-full animate-spin" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="44" fill="none" stroke="var(--bamboo)" strokeWidth="4" strokeOpacity="0.15" />
+              <circle cx="50" cy="50" r="44" fill="none" stroke="var(--bamboo)" strokeWidth="4" strokeDasharray="276" strokeDashoffset="69" strokeLinecap="round" />
+            </svg>
+
+            {/* Inner logo */}
+            <div className="absolute inset-2 bg-white/90 rounded-full p-4 shadow-sm overflow-hidden flex items-center justify-center">
+              <img src={appLogo} alt="" className="w-full h-full object-cover" />
             </div>
           </div>
-          
-          <div className="flex flex-col items-center gap-3 bg-white/70 px-6 py-3 rounded-2xl backdrop-blur-md border border-[color:var(--bamboo)]/10 shadow-sm">
-            <div className="flex items-center gap-1.5 text-[color:var(--bamboo-deep)]">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] animate-pulse">Loading Post</span>
-              <span className="flex gap-0.5">
-                <span className="w-1 h-1 rounded-full bg-[color:var(--bamboo)] animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                <span className="w-1 h-1 rounded-full bg-[color:var(--bamboo)] animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                <span className="w-1 h-1 rounded-full bg-[color:var(--bamboo)] animate-bounce" style={{ animationDelay: '300ms' }}></span>
-              </span>
-            </div>
+
+          <div className="flex flex-col items-center gap-2 bg-white/70 px-6 py-3 rounded-2xl backdrop-blur-md border border-[color:var(--bamboo)]/10 shadow-sm">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--bamboo-deep)]">Loading Post</span>
           </div>
         </div>
       </div>

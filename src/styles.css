@@ -190,7 +190,7 @@ html {
     transform: rotateY(180deg);
 }
 
-/* Custom Driver.js Theme */
+/* ── Custom Driver.js Theme ── */
 .bayanihan-driver-theme.driver-popover {
   background-color: #fdfbf7;
   border: 1px solid var(--color-border);
@@ -241,4 +241,17 @@ html {
 
 .bayanihan-driver-theme .driver-popover-close-btn:hover {
   color: var(--color-bamboo-deep);
+}
+
+/* ── Skeleton shimmer ── */
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #e8e0d0 25%, #f5f0e8 50%, #e8e0d0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
 }

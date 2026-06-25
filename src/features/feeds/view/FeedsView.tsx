@@ -28,6 +28,11 @@ export function FeedsView({ searchQuery, onOpenCreateModal, activeFeature, onSha
   const selectedPost = selectedPostId ? vm.allRequests.find(r => r.id === selectedPostId) : null;
   const otherPosts = selectedPost ? vm.allRequests.filter(r => r.id !== selectedPostId) : [];
 
+  const handleShareAndNavigate = (id: string) => {
+    onSharePost?.(id);
+    setSelectedPostId(id);
+  };
+
   if (selectedPost) {
     return (
       <PostDetailStandaloneView
@@ -35,7 +40,7 @@ export function FeedsView({ searchQuery, onOpenCreateModal, activeFeature, onSha
         onClose={() => setSelectedPostId(null)}
         otherRequests={otherPosts}
         onSelectPost={setSelectedPostId}
-        onShare={onSharePost}
+        onShare={handleShareAndNavigate}
       />
     );
   }
@@ -142,7 +147,7 @@ export function FeedsView({ searchQuery, onOpenCreateModal, activeFeature, onSha
                     <FeedCard
                       key={r.id}
                       r={r}
-                      onShare={onSharePost}
+                      onShare={handleShareAndNavigate}
                       onClick={() => setSelectedPostId(r.id)}
                     />
                   ))}
