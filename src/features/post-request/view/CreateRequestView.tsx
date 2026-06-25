@@ -19,16 +19,26 @@ export const CreateRequestView: React.FC<Props> = ({ onSubmit, isOpen, onClose }
     if (!isOpen && vm.isOpen) vm.closeModal();
   }, [isOpen]);
 
+  React.useEffect(() => {
+    if (vm.isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [vm.isOpen]);
+
   if (!vm.isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl bg-[#FAF8F2] shadow-2xl animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full sm:max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-[#FAF8F2] shadow-2xl animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200">
 
         {/* Header */}
         <div className="border-b border-stone-200 bg-[#F5F2EA] px-8 py-5 flex items-center justify-between">
           <div>
-            <h2 className="font-display text-2xl font-bold tracking-tight text-stone-800">{t('create.title')}</h2>
+            <h2 className="font-display text-lg sm:text-2xl font-bold tracking-tight text-stone-800">{t('create.title')}</h2>
             <p className="mt-1 text-sm text-stone-600">{t('create.desc')}</p>
           </div>
           <button
@@ -40,8 +50,8 @@ export const CreateRequestView: React.FC<Props> = ({ onSubmit, isOpen, onClose }
         </div>
 
         {/* Body */}
-        <form onSubmit={vm.handleSubmit} className="p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        <form onSubmit={vm.handleSubmit} className="p-4 sm:p-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
 
             {/* Row 1 */}
             <div className="space-y-1.5">
@@ -110,18 +120,45 @@ export const CreateRequestView: React.FC<Props> = ({ onSubmit, isOpen, onClose }
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-stone-500">Image URL (Optional)</label>
-              <div className="relative group">
-                <ImageIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-stone-400 group-focus-within:text-[color:var(--bamboo)] transition-colors" />
-                <input
-                  type="url"
-                  value={vm.formData.imageUrl || ''}
-                  onChange={e => vm.handleChange('imageUrl', e.target.value)}
-                  placeholder="https://example.com/image.jpg"
-                  className="w-full rounded-xl border border-stone-200 bg-white pl-12 pr-4 py-3 text-sm font-medium text-stone-800 outline-none transition focus:border-[color:var(--bamboo)] focus:ring-4 focus:ring-[color:var(--bamboo)]/10 placeholder:text-stone-400"
-                />
+            <div className="space-y-1.5 md:col-span-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-stone-500">Photos (Optional, up to 6)</label>
+              {/* Hidden file input */}
+              <input
+                ref={vm.fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={e => vm.handleImageFiles(e.target.files)}
+              />
+              {/* Drop zone / click to upload */}
+              <div
+                onClick={() => vm.fileInputRef.current?.click()}
+                onDragOver={e => e.preventDefault()}
+                onDrop={e => { e.preventDefault(); vm.handleImageFiles(e.dataTransfer.files); }}
+                className="flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed border-stone-300 rounded-xl py-6 px-4 cursor-pointer hover:border-[color:var(--bamboo)] hover:bg-[color:var(--bamboo)]/5 transition-colors group"
+              >
+                <ImageIcon className="h-8 w-8 text-stone-400 group-hover:text-[color:var(--bamboo)] transition-colors" />
+                <p className="text-sm font-semibold text-stone-500 group-hover:text-[color:var(--bamboo-deep)] transition-colors">Click or drag photos here</p>
+                <p className="text-xs text-stone-400">JPG, PNG, WEBP — up to 6 images</p>
               </div>
+              {/* Image Previews */}
+              {vm.imagePreviews.length > 0 && (
+                <div className="grid grid-cols-3 gap-2 mt-2">
+                  {vm.imagePreviews.map((src, i) => (
+                    <div key={i} className="relative group rounded-xl overflow-hidden aspect-video border border-stone-200 shadow-sm">
+                      <img src={src} alt={`Preview ${i + 1}`} className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => vm.removeImage(i)}
+                        className="absolute top-1 right-1 bg-black/60 hover:bg-red-500 text-white rounded-full p-0.5 transition-colors opacity-0 group-hover:opacity-100"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Row 3 */}

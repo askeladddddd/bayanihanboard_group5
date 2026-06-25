@@ -1,7 +1,7 @@
 # Bayanihan Board: Frontend Prototype Specification
 
 ## Project Overview
-A lightweight frontend prototype demonstrating a community‑help request flow using **React**, **TypeScript**, and **Vite**. The app runs entirely in the browser with static mock data, showcasing a clean MVVM architecture and interactive SVG visualisation.
+A lightweight frontend prototype demonstrating a community‑help request flow using **React**, **TypeScript**, and **Vite**. The app runs entirely in the browser with static mock data, showcasing a clean MVVM architecture and an interactive animated SVG Bahay Kubo visualisation.
 
 ## Architecture Pattern
 **React + TypeScript MVVM** – Pure frontend prototype with static data mocking. No backend services are required.
@@ -9,7 +9,7 @@ A lightweight frontend prototype demonstrating a community‑help request flow u
 ---
 
 ## 1. User Journey Flow & Scenario
-**Scenario:** A seeker creates a request that needs three volunteers. As volunteers register their contributions, the frontend state mutates directly inside the ViewModel layer, driving an animated SVG lift layout.
+**Scenario:** A seeker creates a request that needs volunteers. As volunteers register their contributions, the frontend state mutates directly inside the ViewModel layer, driving an animated SVG lift layout.
 
 | Step | Target Domain | Functional Sequence / Data State Mutation |
 | :--- | :--- | :--- |
@@ -18,7 +18,7 @@ A lightweight frontend prototype demonstrating a community‑help request flow u
 | 3 | **Progress View** | Initializes rendering sequence; positions animated SVG Bahay Kubo at baseline level (0%). |
 | 4 | **Volunteer (View)** | Triggers commitment selection handler via "I can help!" button. |
 | 5 | **Progress ViewModel** | Increments metrics directly within state array wrapper. Recalculates lift ratio (33.3%). |
-| 6 | **Progress View** | Applies updated ratio to CSS transform property. SVG raises. |
+| 6 | **Progress View** | Applies updated ratio to CSS transform. SVG raises, ladder grows, progress pill updates. |
 
 ---
 
@@ -53,7 +53,7 @@ sequenceDiagram
 
     PVM->>PV: Update Lift Parameters
     activate PV
-    PV->>PV: Apply CSS Transform
+    PV->>PV: Apply CSS Transform (house, ladder, progress bar)
     PV-->>V: Visual Feedback (Kubo Lifts)
     deactivate PV
 ```
@@ -76,35 +76,32 @@ The system enforces clear layer boundaries:
 graph TD
     subgraph View Layer
         A[App.tsx]
-        B[RequestView.tsx]
-        C[CreateRequestView.tsx]
-        D[ProgressView.tsx]
+        B[FeedsView.tsx]
+        C[ProgressView.tsx]
+        D[PostDetailHeader.tsx]
+        E[FeedCardHeader.tsx]
     end
 
     subgraph ViewModel Layer
-        E[useRequestViewModel.ts]
-        F[useCreateRequestViewModel.ts]
+        F[useFeedsViewModel.ts]
         G[useProgressViewModel.ts]
     end
 
     subgraph Model / Data Layer
         H[RequestModel.ts]
-        I[CreateRequestModel.ts]
-        J[mockRequestsDb.ts]
+        I[mockRequestsDb.ts]
     end
 
     A --> B
     A --> C
-    A --> D
-
+    B --> D
     B --> E
-    C --> F
-    D --> G
 
-    E --> H
-    E --> J
-    F --> I
+    B --> F
+    C --> G
+
     F --> H
+    F --> I
     G --> H
 ```
 
@@ -115,53 +112,78 @@ graph TD
 ```
 src/
 ├── contexts/
-│   └── LanguageContext.tsx      # Language translator logic
+│   └── LanguageContext.tsx          # Language translator logic
 ├── features/
-│   ├── feeds/                   # Main feed and sidebar components
-│   ├── hotlines/                # Emergency hotlines view
-│   ├── leaderboard/             # Volunteer leaderboard view
-│   ├── news/                    # Community news view
-│   ├── post-request/            # Post creation modals
-│   ├── progress/                # SVG lift animations
-│   └── requests/                # Request models and state
+│   ├── feeds/                       # Main feed, cards, sidebar, post detail
+│   │   └── view/components/
+│   │       ├── FeedCard/
+│   │       │   ├── FeedCardHeader.tsx   # MapPin location icon + neighborhood
+│   │       │   ├── FeedCardImage.tsx    # Multi-image carousel
+│   │       │   └── FeedCardActions.tsx  # Help & Share buttons
+│   │       ├── PostDetail/
+│   │       │   └── PostDetailHeader.tsx # MapPin icon, neutral stone badge
+│   │       └── SquareFeedCard.tsx
+│   ├── hotlines/                    # Emergency hotlines view
+│   ├── leaderboard/                 # Volunteer leaderboard view
+│   ├── news/                        # Community news view
+│   ├── post-request/                # Post creation modals
+│   ├── progress/                    # Animated Bahay Kubo SVG
+│   │   └── view/ProgressView.tsx    # Pill progress bar + dynamic ladder
+│   └── requests/                    # Request models and state
 ├── mock/
-│   └── mockRequestsDb.ts        # Static Database
+│   └── mockRequestsDb.ts            # Static Database
 └── shared-components/
     └── Button/
 ```
 
-### Mock State Store Model Implementation
+### Key Feature: Animated Bahay Kubo (`ProgressView`)
+The `ProgressView` renders a fully animated SVG Bahay Kubo that responds to volunteer progress:
+
+| Element | Behaviour |
+| :--- | :--- |
+| **House** | Translates upward via `liftPx` as volunteer ratio increases |
+| **Bamboo Poles** | Appear one-per-volunteer and extend as the house lifts |
+| **Ladder** | Dynamically spans from ground to rising floor, auto-adding rungs as it grows |
+| **Windows** | Open dark interior with swaying pink curtains (no frames/glass) |
+| **Door** | Animated 3D perspective swing open/close on a 6s infinite loop |
+| **Progress Bar** | Minimal pill bar above the kubo with `% lifted` label in dark green |
+| **Completion** | Full overlay fade-in with "BAYANIHAN COMPLETE!" & checkmark |
+
+### `HelpRequest` Model
 ```typescript
 // src/features/requests/model/RequestModel.ts
 export interface HelpRequest {
   id: string;
   title: string;
-  type: 'moving' | 'medical' | 'fundraiser';
+  type: 'moving' | 'medical' | 'fundraiser' | 'other';
+  customType?: string;
+  neighborhood: string;
+  needs: string;
+  whenISO: string;
   targetVolunteers: number;
   currentVolunteers: number;
-  commitments: Array<{ volunteerName: string; contribution: string }>;
+  commitments: Commitment[];
+  imageUrl?: string;
+  imageUrls?: string[];
 }
-```
-
-```typescript
-// src/mock/mockRequestsDb.ts
-import type { HelpRequest } from '../features/requests/model/RequestModel';
-
-export const mockRequestsDb: HelpRequest[] = [
-  {
-    id: "req-101",
-    title: "Bayanihan Move: Mang Juan's House",
-    type: "moving",
-    targetVolunteers: 3,
-    currentVolunteers: 1,
-    commitments: [{ volunteerName: "Alejandro", contribution: "Heavy lifting labor" }]
-  }
-];
 ```
 
 ---
 
-## 6. Vercel Deployment Process
+## 6. Recent UI Changes
+| Date | Change |
+| :--- | :--- |
+| 2026-06-25 | Redesigned progress bar to minimal pill style with `% lifted` label in dark green |
+| 2026-06-25 | Refactored Bahay Kubo SVG door to an open doorway with 3D animated door swing |
+| 2026-06-25 | Replaced window panels with open-interior windows and swaying pink curtains |
+| 2026-06-25 | Fixed ladder: moved outside house group, anchored to ground, dynamically grows with liftPx |
+| 2026-06-25 | Added `MapPin` icon to Feed Card header location (neighborhood) |
+| 2026-06-25 | Added `MapPin` icon to Post Detail header location badge |
+| 2026-06-25 | Removed green colour from Post Detail location badge (changed to neutral stone) |
+
+---
+
+## 7. Vercel Deployment Process
 The project is built with **Vite** and **Tailwind CSS v4**.
 
 ### Step 1: Pre‑Deployment Checks
@@ -173,7 +195,7 @@ npm run build
 ### Step 2: Push to GitHub
 ```bash
 git add .
-git commit -m "chore: prepare for Vercel deployment"
+git commit -m "feat(ui): redesign progress bar, kubo svg, location icons, and dynamic ladder"
 git push origin main
 ```
 
@@ -188,8 +210,8 @@ git push origin main
 4. Click **Deploy**.
 
 ### Step 4: Verification
-After Vercel finishes building, visit the generated URL (e.g., `https://bayanihan-board.vercel.app`) to verify that the mock data and SVG visualisation render correctly.
+After Vercel finishes building, visit the generated URL (e.g., `https://bayanihan-board.vercel.app`) to verify that the animated SVG, progress bar, and location icons all render correctly.
 
 ---
 
-*This README has been updated to remove line‑number prefixes, reflect the current project dependencies, and improve overall readability and visual presentation.*
+*This README reflects the current state of the project as of 2026-06-25, including all recent UI improvements to the Bayanihan Board prototype.*

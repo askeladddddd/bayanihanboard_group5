@@ -1,13 +1,14 @@
-import { X, Trophy, Newspaper, Siren, Home } from "lucide-react";
+import { X, Trophy, Newspaper, Siren, Home, Plus } from "lucide-react";
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   activeFeature: string;
   setActiveFeature: (feature: string) => void;
+  onOpenCreateModal?: () => void;
 }
 
-export function Sidebar({ isOpen, onClose, activeFeature, setActiveFeature }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, activeFeature, setActiveFeature, onOpenCreateModal }: SidebarProps) {
   const menuItems = [
     { id: 'feed', label: 'Home (Feeds)', icon: Home, colorClass: 'text-[color:var(--bamboo-deep)]', activeBg: 'bg-[color:var(--bamboo)]/15', activeText: 'text-[color:var(--bamboo-deep)]' },
     { id: 'leaderboard', label: 'Community Leaderboard', icon: Trophy, colorClass: 'text-yellow-500', activeBg: 'bg-yellow-500/15', activeText: 'text-yellow-600' },
@@ -68,6 +69,35 @@ export function Sidebar({ isOpen, onClose, activeFeature, setActiveFeature }: Si
           <p className="text-xs text-muted-foreground text-center font-medium">Bayanihan Board v1.0</p>
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation Bar */}
+      <nav className="fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur-md border-t border-border/40 flex items-center justify-around px-2 py-2 lg:hidden safe-area-pb">
+        {menuItems.map((item) => {
+          const isActive = activeFeature === item.id;
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveFeature(item.id)}
+              className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 rounded-xl transition-all min-w-[56px] ${
+                isActive ? `${item.activeBg} ${item.activeText}` : 'text-muted-foreground'
+              }`}
+            >
+              <Icon className={`h-5 w-5 ${isActive ? '' : item.colorClass}`} strokeWidth={isActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold">{item.label.split(' ')[0]}</span>
+            </button>
+          );
+        })}
+        {onOpenCreateModal && (
+          <button
+            onClick={onOpenCreateModal}
+            className="flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 rounded-xl text-muted-foreground hover:text-foreground transition-all min-w-[56px]"
+          >
+            <Plus className="h-5 w-5 text-[color:var(--bamboo-deep)]" strokeWidth={2.5} />
+            <span className="text-[10px] font-bold text-[color:var(--bamboo-deep)]">Post</span>
+          </button>
+        )}
+      </nav>
     </>
   );
 }

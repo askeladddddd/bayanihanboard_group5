@@ -1,9 +1,18 @@
 // src/features/request-flow/RequestModel.ts
 export type RequestType = "moving" | "medical" | "fundraiser" | "other";
 
+export interface Reply {
+    id: string;
+    authorName: string;
+    content: string;
+    createdAtISO: string;
+}
+
 export interface Commitment {
+    id: string;
     volunteerName: string;
     contribution: string;
+    replies?: Reply[];
 }
 
 export interface HelpRequest {
@@ -18,4 +27,5 @@ export interface HelpRequest {
     currentVolunteers: number;
     commitments: Commitment[];
     imageUrl?: string;
+    imageUrls?: string[];
 }

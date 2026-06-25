@@ -1,63 +1,45 @@
 import { useState, useMemo } from 'react';
-import { useRequestViewModel } from '../../requests/viewmodel/useRequestViewModel';
+import { useRequestsContext } from '@/contexts/RequestsContext';
 
 export function useFeedsViewModel(searchQuery: string) {
-  const { requests, commit } = useRequestViewModel();
-
-  // Track which post's "Help" section is currently open
-  const [activeHelpId, setActiveHelpId] = useState<string | null>(null);
-
-  // Form state for helping
-  const [helpName, setHelpName] = useState("");
-  const [helpContribution, setHelpContribution] = useState("");
+  const { requests: rawRequests } = useRequestsContext();
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>('recent');
+  const [visibleAnimations, setVisibleAnimations] = useState<string[]>([]);
 
   const filteredRequests = useMemo(() => {
-    let result = requests;
+    let result = [...rawRequests];
+
+    if (filterCategory !== 'all') {
+      result = result.filter(r => r.type === filterCategory);
+    }
+
+    if (selectedDate) {
+      result = result.filter(r => r.whenISO.startsWith(selectedDate));
+    }
 
     if (searchQuery.trim()) {
-      const lowerQuery = searchQuery.toLowerCase();
-      result = result.filter(r =>
-        r.title.toLowerCase().includes(lowerQuery) ||
-        r.neighborhood.toLowerCase().includes(lowerQuery) ||
-        r.needs.toLowerCase().includes(lowerQuery)
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        r =>
+          r.title.toLowerCase().includes(q) ||
+          r.neighborhood.toLowerCase().includes(q) ||
+          r.needs.toLowerCase().includes(q)
       );
     }
 
+    if (sortBy === 'urgent') {
+      result.sort((a, b) => {
+        const gapA = a.targetVolunteers - a.currentVolunteers;
+        const gapB = b.targetVolunteers - b.currentVolunteers;
+        return gapB - gapA;
+      });
+    }
+
     return result;
-  }, [requests, searchQuery]);
-
-  const toggleHelpSection = (reqId: string) => {
-    setActiveHelpId(prev => {
-      // If opening a new one, clear the form
-      if (prev !== reqId) {
-        setHelpName("");
-        setHelpContribution("");
-        return reqId;
-      }
-      return null;
-    });
-  };
-
-  const submitHelp = (reqId: string, e: React.FormEvent) => {
-    e.preventDefault();
-    if (!helpName.trim() || !helpContribution.trim()) return;
-
-    // Call the commit function to add volunteer
-    commit(reqId, {
-      volunteerName: helpName,
-      contribution: helpContribution
-    });
-
-    // Close and reset form
-    setActiveHelpId(null);
-    setHelpName("");
-    setHelpContribution("");
-  };
-
-  // Track which animations are visible (hidden by default)
-  const [visibleAnimations, setVisibleAnimations] = useState<string[]>([]);
+  }, [rawRequests, searchQuery, selectedDate, filterCategory, sortBy]);
 
   const toggleAnimation = (reqId: string) => {
     setVisibleAnimations(prev =>
@@ -67,17 +49,14 @@ export function useFeedsViewModel(searchQuery: string) {
 
   return {
     requests: filteredRequests,
-    allRequests: requests,
+    allRequests: rawRequests,
     selectedDate,
     setSelectedDate,
-    activeHelpId,
-    toggleHelpSection,
-    helpName,
-    setHelpName,
-    helpContribution,
-    setHelpContribution,
-    submitHelp,
     visibleAnimations,
-    toggleAnimation
+    toggleAnimation,
+    filterCategory,
+    setFilterCategory,
+    sortBy,
+    setSortBy
   };
 }

@@ -146,3 +146,99 @@ html {
     animation: sway 6s ease-in-out infinite;
     transform-origin: bottom center;
 }
+
+@keyframes slide-bg {
+    0% {
+        background-position: 0% center;
+    }
+    50% {
+        background-position: 100% center;
+    }
+    100% {
+        background-position: 0% center;
+    }
+}
+
+.animate-slide-bg {
+    animation: slide-bg 20s linear infinite;
+}
+
+@keyframes slide-images {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.animate-slide-images {
+    animation: slide-images 30s linear infinite;
+}
+
+/* 3D Flip Utilities */
+.perspective-1000 {
+    perspective: 1000px;
+}
+.preserve-3d {
+    transform-style: preserve-3d;
+}
+.backface-hidden {
+    backface-visibility: hidden;
+}
+.rotate-y-180 {
+    transform: rotateY(180deg);
+}
+
+/* Custom Driver.js Theme */
+.bayanihan-driver-theme.driver-popover {
+  background-color: #fdfbf7;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+  font-family: var(--font-body);
+}
+
+.bayanihan-driver-theme .driver-popover-title {
+  color: var(--color-bamboo-deep);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.bayanihan-driver-theme .driver-popover-description {
+  color: var(--color-muted-foreground);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.bayanihan-driver-theme .driver-popover-progress-text {
+  color: var(--color-bamboo);
+  font-weight: bold;
+}
+
+.bayanihan-driver-theme .driver-popover-next-btn,
+.bayanihan-driver-theme .driver-popover-prev-btn {
+  background-color: var(--color-bamboo);
+  color: white !important;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: bold;
+  text-shadow: none;
+  transition: background-color 0.2s ease;
+}
+
+.bayanihan-driver-theme .driver-popover-next-btn:hover,
+.bayanihan-driver-theme .driver-popover-prev-btn:hover {
+  background-color: var(--color-bamboo-deep);
+}
+
+.bayanihan-driver-theme .driver-popover-close-btn {
+  color: var(--color-muted-foreground);
+  transition: color 0.2s ease;
+}
+
+.bayanihan-driver-theme .driver-popover-close-btn:hover {
+  color: var(--color-bamboo-deep);
+}

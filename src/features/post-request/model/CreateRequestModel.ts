@@ -10,5 +10,6 @@ export const DEFAULT_NEW_REQUEST: NewHelpRequest = {
   needs: '',
   whenISO: '',
   targetVolunteers: 6,
-  imageUrl: ''
+  imageUrl: '',
+  imageUrls: []
 };

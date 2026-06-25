@@ -11,8 +11,8 @@ export const mockRequestsDb: HelpRequest[] = [
     targetVolunteers: 6,
     currentVolunteers: 2,
     commitments: [
-      { volunteerName: "Alejandro", contribution: "Heavy lifting labor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac ultrices justo, id sollicitudin lectus. Etiam non arcu quis ante interdum vestibulum id ac lorem. Cras ac erat elementum, mollis diam eu, elementum sapien. Vivamus sed neque vel erat scelerisque faucibus. Maecenas tristique lorem ut ante finibus, vel lacinia ex luctus. Aliquam id eleifend erat. Integer non mi dolor. Curabitur sed lectus finibus, efficitur sapien sed, lacinia nisi.\n\nIn hac habitasse platea dictumst. Vestibulum tristique eros sit amet justo rhoncus, sed volutpat est aliquet. Fusce vulputate, metus a pellentesque pulvinar, diam nisl maximus eros, sed sodales lectus sem eu lacus. Curabitur lacinia vulputate dolor ut aliquet. Sed rhoncus feugiat interdum. Pellentesque tempus arcu a nulla tempor sollicitudin. Sed finibus nisl lectus, eget hendrerit turpis finibus sed. Pellentesque imperdiet turpis in ex convallis, eget feugiat purus tristique. Vivamus cursus sapien mi, vel ultrices turpis tempus sed." },
-      { volunteerName: "Maricel", contribution: "Lunch for the crew" },
+      { id: "cmt-1", volunteerName: "Alejandro", contribution: "I can help with the heavy lifting." },
+      { id: "cmt-2", volunteerName: "Maricel", contribution: "Lunch for the crew" },
     ],
     imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop",
   },
@@ -25,7 +25,7 @@ export const mockRequestsDb: HelpRequest[] = [
     whenISO: "2026-06-25T14:00:00Z",
     targetVolunteers: 3,
     currentVolunteers: 1,
-    commitments: [{ volunteerName: "Jose", contribution: "₱500 via GCash. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac ultrices justo, id sollicitudin lectus. Etiam non arcu quis ante interdum vestibulum id ac lorem. Cras ac erat elementum, mollis diam eu, elementum sapien. Vivamus sed neque vel erat scelerisque faucibus. Maecenas tristique lorem ut ante finibus, vel lacinia ex luctus. Aliquam id eleifend erat. Integer non mi dolor. Curabitur sed lectus finibus, efficitur sapien sed, lacinia nisi.\n\nIn hac habitasse platea dictumst. Vestibulum tristique eros sit amet justo rhoncus, sed volutpat est aliquet. Fusce vulputate, metus a pellentesque pulvinar, diam nisl maximus eros, sed sodales lectus sem eu lacus. Curabitur lacinia vulputate dolor ut aliquet. Sed rhoncus feugiat interdum. Pellentesque tempus arcu a nulla tempor sollicitudin. Sed finibus nisl lectus, eget hendrerit turpis finibus sed. Pellentesque imperdiet turpis in ex convallis, eget feugiat purus tristique. Vivamus cursus sapien mi, vel ultrices turpis tempus sed." }],
+    commitments: [{ id: "cmt-3", volunteerName: "Jose", contribution: "₱500 via GCash." }],
     imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000&auto=format&fit=crop",
   },
   {
@@ -38,10 +38,10 @@ export const mockRequestsDb: HelpRequest[] = [
     targetVolunteers: 10,
     currentVolunteers: 4,
     commitments: [
-      { volunteerName: "Kuya Boy", contribution: "2 buckets of paint. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac ultrices justo, id sollicitudin lectus. Etiam non arcu quis ante interdum vestibulum id ac lorem. Cras ac erat elementum, mollis diam eu, elementum sapien. Vivamus sed neque vel erat scelerisque faucibus. Maecenas tristique lorem ut ante finibus, vel lacinia ex luctus. Aliquam id eleifend erat. Integer non mi dolor. Curabitur sed lectus finibus, efficitur sapien sed, lacinia nisi.\n\nIn hac habitasse platea dictumst. Vestibulum tristique eros sit amet justo rhoncus, sed volutpat est aliquet. Fusce vulputate, metus a pellentesque pulvinar, diam nisl maximus eros, sed sodales lectus sem eu lacus. Curabitur lacinia vulputate dolor ut aliquet. Sed rhoncus feugiat interdum. Pellentesque tempus arcu a nulla tempor sollicitudin. Sed finibus nisl lectus, eget hendrerit turpis finibus sed. Pellentesque imperdiet turpis in ex convallis, eget feugiat purus tristique. Vivamus cursus sapien mi, vel ultrices turpis tempus sed." },
-      { volunteerName: "Miko", contribution: "Labor for painting" },
-      { volunteerName: "Sarah", contribution: "Labor for painting" },
-      { volunteerName: "Tito Jun", contribution: "Snacks" },
+      { id: "cmt-4", volunteerName: "Kuya Boy", contribution: "2 buckets of paint." },
+      { id: "cmt-5", volunteerName: "Miko", contribution: "Labor for painting" },
+      { id: "cmt-6", volunteerName: "Sarah", contribution: "Labor for painting" },
+      { id: "cmt-7", volunteerName: "Tito Jun", contribution: "Snacks" },
     ],
     imageUrl: "https://images.unsplash.com/photo-1519861531473-9200262188bf?q=80&w=1000&auto=format&fit=crop",
   },
@@ -56,19 +56,19 @@ export const mockRequestsDb: HelpRequest[] = [
     targetVolunteers: 20,
     currentVolunteers: 13,
     commitments: [
-      { volunteerName: "Liza", contribution: "Garbage bags and gloves. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac ultrices justo, id sollicitudin lectus. Etiam non arcu quis ante interdum vestibulum id ac lorem. Cras ac erat elementum, mollis diam eu, elementum sapien. Vivamus sed neque vel erat scelerisque faucibus. Maecenas tristique lorem ut ante finibus, vel lacinia ex luctus. Aliquam id eleifend erat. Integer non mi dolor. Curabitur sed lectus finibus, efficitur sapien sed, lacinia nisi.\n\nIn hac habitasse platea dictumst. Vestibulum tristique eros sit amet justo rhoncus, sed volutpat est aliquet. Fusce vulputate, metus a pellentesque pulvinar, diam nisl maximus eros, sed sodales lectus sem eu lacus. Curabitur lacinia vulputate dolor ut aliquet. Sed rhoncus feugiat interdum. Pellentesque tempus arcu a nulla tempor sollicitudin. Sed finibus nisl lectus, eget hendrerit turpis finibus sed. Pellentesque imperdiet turpis in ex convallis, eget feugiat purus tristique. Vivamus cursus sapien mi, vel ultrices turpis tempus sed." },
-      { volunteerName: "Ben", contribution: "Cleanup crew" },
-      { volunteerName: "Ana", contribution: "Cleanup crew" },
-      { volunteerName: "Paulo", contribution: "Cleanup crew" },
-      { volunteerName: "Grace", contribution: "Bottled water" },
-      { volunteerName: "Miguel", contribution: "Heavy duty boots" },
-      { volunteerName: "Sofia", contribution: "Snacks for the crew" },
-      { volunteerName: "Diego", contribution: "First aid kit" },
-      { volunteerName: "Elena", contribution: "Trash pickers" },
-      { volunteerName: "Carlos", contribution: "Cleanup crew" },
-      { volunteerName: "Maria", contribution: "Cleanup crew" },
-      { volunteerName: "Juan", contribution: "Pickup truck for waste" },
-      { volunteerName: "Teresa", contribution: "Extra garbage bags" },
+      { id: "cmt-8", volunteerName: "Liza", contribution: "Garbage bags and gloves." },
+      { id: "cmt-9", volunteerName: "Ben", contribution: "Cleanup crew" },
+      { id: "cmt-10", volunteerName: "Ana", contribution: "Cleanup crew" },
+      { id: "cmt-11", volunteerName: "Paulo", contribution: "Cleanup crew" },
+      { id: "cmt-12", volunteerName: "Grace", contribution: "Bottled water" },
+      { id: "cmt-13", volunteerName: "Miguel", contribution: "Heavy duty boots" },
+      { id: "cmt-14", volunteerName: "Sofia", contribution: "Snacks for the crew" },
+      { id: "cmt-15", volunteerName: "Diego", contribution: "First aid kit" },
+      { id: "cmt-16", volunteerName: "Elena", contribution: "Trash pickers" },
+      { id: "cmt-17", volunteerName: "Carlos", contribution: "Cleanup crew" },
+      { id: "cmt-18", volunteerName: "Maria", contribution: "Cleanup crew" },
+      { id: "cmt-19", volunteerName: "Juan", contribution: "Pickup truck for waste" },
+      { id: "cmt-20", volunteerName: "Teresa", contribution: "Extra garbage bags" },
     ],
     imageUrl: "https://images.unsplash.com/photo-1618477461853-cf6ed80f48f5?q=80&w=1000&auto=format&fit=crop",
   },
@@ -94,7 +94,7 @@ export const mockRequestsDb: HelpRequest[] = [
     targetVolunteers: 3,
     currentVolunteers: 1,
     commitments: [
-      { volunteerName: "Mark", contribution: "Type O+ Donor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac ultrices justo, id sollicitudin lectus. Etiam non arcu quis ante interdum vestibulum id ac lorem. Cras ac erat elementum, mollis diam eu, elementum sapien. Vivamus sed neque vel erat scelerisque faucibus. Maecenas tristique lorem ut ante finibus, vel lacinia ex luctus. Aliquam id eleifend erat. Integer non mi dolor. Curabitur sed lectus finibus, efficitur sapien sed, lacinia nisi.\n\nIn hac habitasse platea dictumst. Vestibulum tristique eros sit amet justo rhoncus, sed volutpat est aliquet. Fusce vulputate, metus a pellentesque pulvinar, diam nisl maximus eros, sed sodales lectus sem eu lacus. Curabitur lacinia vulputate dolor ut aliquet. Sed rhoncus feugiat interdum. Pellentesque tempus arcu a nulla tempor sollicitudin. Sed finibus nisl lectus, eget hendrerit turpis finibus sed. Pellentesque imperdiet turpis in ex convallis, eget feugiat purus tristique. Vivamus cursus sapien mi, vel ultrices turpis tempus sed." }
+      { id: "cmt-21", volunteerName: "Mark", contribution: "Type O+ Donor." }
     ],
     imageUrl: "https://images.unsplash.com/photo-1615461066159-fea0960485d5?q=80&w=1000&auto=format&fit=crop",
   },
@@ -108,8 +108,8 @@ export const mockRequestsDb: HelpRequest[] = [
     targetVolunteers: 15,
     currentVolunteers: 2,
     commitments: [
-      { volunteerName: "Cathy", contribution: "10 Notebooks" },
-      { volunteerName: "Dennis", contribution: "Pencils and Erasers" }
+      { id: "cmt-22", volunteerName: "Cathy", contribution: "10 Notebooks" },
+      { id: "cmt-23", volunteerName: "Dennis", contribution: "Pencils and Erasers" }
     ],
     imageUrl: "https://images.unsplash.com/photo-1456735190827-d1262f71b8a3?q=80&w=1000&auto=format&fit=crop",
   },
@@ -124,7 +124,7 @@ export const mockRequestsDb: HelpRequest[] = [
     targetVolunteers: 4,
     currentVolunteers: 1,
     commitments: [
-      { volunteerName: "Rina", contribution: "Algebra Tutor" }
+      { id: "cmt-24", volunteerName: "Rina", contribution: "Algebra Tutor" }
     ],
     imageUrl: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1000&auto=format&fit=crop",
   },
@@ -138,9 +138,9 @@ export const mockRequestsDb: HelpRequest[] = [
     targetVolunteers: 8,
     currentVolunteers: 3,
     commitments: [
-      { volunteerName: "Flora", contribution: "Transport van" },
-      { volunteerName: "Cardo", contribution: "Labor" },
-      { volunteerName: "Berto", contribution: "Labor" }
+      { id: "cmt-25", volunteerName: "Flora", contribution: "Transport van" },
+      { id: "cmt-26", volunteerName: "Cardo", contribution: "Labor" },
+      { id: "cmt-27", volunteerName: "Berto", contribution: "Labor" }
     ],
     imageUrl: "https://images.unsplash.com/photo-1416879598555-220b8b540263?q=80&w=1000&auto=format&fit=crop",
   },
@@ -166,11 +166,11 @@ export const mockRequestsDb: HelpRequest[] = [
     targetVolunteers: 12,
     currentVolunteers: 5,
     commitments: [
-      { volunteerName: "Tita Baby", contribution: "1 Sack of Rice" },
-      { volunteerName: "Carlo", contribution: "Canned Goods" },
-      { volunteerName: "Jessa", contribution: "Fresh Vegetables" },
-      { volunteerName: "Ding", contribution: "Eggs" },
-      { volunteerName: "Ate Pacing", contribution: "Bread" }
+      { id: "cmt-28", volunteerName: "Tita Baby", contribution: "1 Sack of Rice" },
+      { id: "cmt-29", volunteerName: "Carlo", contribution: "Canned Goods" },
+      { id: "cmt-30", volunteerName: "Jessa", contribution: "Fresh Vegetables" },
+      { id: "cmt-31", volunteerName: "Ding", contribution: "Eggs" },
+      { id: "cmt-32", volunteerName: "Ate Pacing", contribution: "Bread" }
     ],
     imageUrl: "https://images.unsplash.com/photo-1593113563332-614c27471850?q=80&w=1000&auto=format&fit=crop",
   },
@@ -185,7 +185,7 @@ export const mockRequestsDb: HelpRequest[] = [
     targetVolunteers: 3,
     currentVolunteers: 1,
     commitments: [
-      { volunteerName: "Doc V", contribution: "Temporary Foster" }
+      { id: "cmt-33", volunteerName: "Doc V", contribution: "Temporary Foster" }
     ],
     imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1000&auto=format&fit=crop",
   },
@@ -211,7 +211,7 @@ export const mockRequestsDb: HelpRequest[] = [
     targetVolunteers: 5,
     currentVolunteers: 1,
     commitments: [
-      { volunteerName: "Dr. Reyes", contribution: "Pro-bono extractions" }
+      { id: "cmt-34", volunteerName: "Dr. Reyes", contribution: "Pro-bono extractions" }
     ],
     imageUrl: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?q=80&w=1000&auto=format&fit=crop",
   },
@@ -225,8 +225,8 @@ export const mockRequestsDb: HelpRequest[] = [
     targetVolunteers: 8,
     currentVolunteers: 2,
     commitments: [
-      { volunteerName: "Kapitan Rey", contribution: "GI Sheets" },
-      { volunteerName: "Totoy", contribution: "Carpentry labor" }
+      { id: "cmt-35", volunteerName: "Kapitan Rey", contribution: "GI Sheets" },
+      { id: "cmt-36", volunteerName: "Totoy", contribution: "Carpentry labor" }
     ],
     imageUrl: "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1000&auto=format&fit=crop",
   }

@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { useFeedsViewModel } from "../../viewmodel/useFeedsViewModel";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function MiniCalendar({
   allRequests,
@@ -73,9 +74,12 @@ function MiniCalendar({
 
 interface FeedsSidebarProps {
   vm: ReturnType<typeof useFeedsViewModel>;
+  onSelectPost: (id: string) => void;
 }
 
-export function FeedsSidebar({ vm }: FeedsSidebarProps) {
+export function FeedsSidebar({ vm, onSelectPost }: FeedsSidebarProps) {
+  const { t } = useLanguage();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const displayedMiniEvents = useMemo(() => {
     if (vm.selectedDate) {
       return vm.allRequests.filter((r: any) => r.whenISO.startsWith(vm.selectedDate)).slice(0, 3);
@@ -85,29 +89,18 @@ export function FeedsSidebar({ vm }: FeedsSidebarProps) {
       .slice(0, 3);
   }, [vm.allRequests, vm.selectedDate]);
 
-  return (
-    <aside className="w-[360px] shrink-0 hidden lg:block">
-      <div className="sticky top-28">
-        {/* CTA Banner (Schedule Planning) */}
-        <div className="relative overflow-hidden rounded-3xl bg-[color:var(--primary)] p-6 text-[color:var(--primary-foreground)] shadow-xl transition duration-300 hover:-translate-y-1 mb-6">
+  const sidebarContent = (
+    <div className="sticky top-28 space-y-4">
+      {/* CTA Banner (Schedule Planning) */}
+      <div className="relative overflow-hidden rounded-3xl bg-[color:var(--primary)] p-5 sm:p-6 text-[color:var(--primary-foreground)] shadow-xl transition duration-300 hover:-translate-y-1">
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[color:var(--nipa)] opacity-20 blur-3xl"></div>
         <div className="relative z-10 flex flex-col gap-4">
           <div className="space-y-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-[color:var(--bamboo)]">
-              Calendar
-            </span>
-            <h2 className="font-display text-xl font-bold leading-tight">
-              Upcoming Community Efforts
-            </h2>
-            <p className="text-sm text-[color:var(--primary-foreground)]/80">
-              View and coordinate large-scale Bayanihan events ahead of time.
-            </p>
+            <span className="text-xs font-bold uppercase tracking-widest text-[color:var(--bamboo)]">Calendar</span>
+            <h2 className="font-display text-lg sm:text-xl font-bold leading-tight">Upcoming Community Efforts</h2>
+            <p className="text-sm text-[color:var(--primary-foreground)]/80">View and coordinate large-scale Bayanihan events ahead of time.</p>
           </div>
-          <MiniCalendar
-            allRequests={vm.allRequests}
-            selectedDate={vm.selectedDate}
-            onSelectDate={vm.setSelectedDate}
-          />
+          <MiniCalendar allRequests={vm.allRequests} selectedDate={vm.selectedDate} onSelectDate={vm.setSelectedDate} />
         </div>
       </div>
 
@@ -128,13 +121,13 @@ export function FeedsSidebar({ vm }: FeedsSidebarProps) {
         <div className="space-y-3">
           {displayedMiniEvents.length > 0 ? (
             displayedMiniEvents.map((event: any) => (
-              <div key={event.id} className="flex gap-3 bg-muted/30 rounded-2xl p-3 border border-border/40 hover:bg-muted/50 transition-colors cursor-pointer group">
+              <div key={event.id} onClick={() => onSelectPost(event.id)} className="flex gap-3 bg-muted/30 rounded-2xl p-3 border border-border/40 hover:bg-muted/50 transition-colors cursor-pointer group">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[color:var(--capiz)] font-display font-bold text-[color:var(--nipa-deep)] text-sm shadow-inner group-hover:scale-105 transition-transform">
                   {event.title.charAt(0).toUpperCase()}
                 </div>
                 <div className="flex flex-col overflow-hidden justify-center">
-                  <span className="font-bold text-sm text-foreground truncate group-hover:text-[color:var(--bamboo-deep)] transition-colors">{event.title}</span>
-                  <span className="text-xs text-muted-foreground truncate">{event.neighborhood}</span>
+                  <span className="font-bold text-sm text-foreground truncate group-hover:text-[color:var(--bamboo-deep)] transition-colors">{t(event.title)}</span>
+                  <span className="text-xs text-muted-foreground truncate">{t(event.neighborhood)}</span>
                 </div>
               </div>
             ))
@@ -143,7 +136,31 @@ export function FeedsSidebar({ vm }: FeedsSidebarProps) {
           )}
         </div>
       </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Mobile: Collapsible toggle button + dropdown */}
+      <div className="block lg:hidden w-full">
+        <button
+          onClick={() => setMobileOpen(o => !o)}
+          className="w-full flex items-center justify-between px-5 py-3 bg-card border border-border/50 rounded-2xl shadow-sm font-bold text-sm text-foreground hover:bg-muted/40 transition-colors"
+        >
+          <span>📅 Calendar & Upcoming Events</span>
+          <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${mobileOpen ? 'rotate-180' : ''}`} />
+        </button>
+        {mobileOpen && (
+          <div className="mt-3 animate-in slide-in-from-top-2 duration-200">
+            {sidebarContent}
+          </div>
+        )}
       </div>
-    </aside>
+
+      {/* Desktop: Full sidebar */}
+      <aside className="w-[340px] xl:w-[360px] shrink-0 hidden lg:block">
+        {sidebarContent}
+      </aside>
+    </>
   );
 }
