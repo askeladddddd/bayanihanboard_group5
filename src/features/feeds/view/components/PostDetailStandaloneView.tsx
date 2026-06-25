@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import type { HelpRequest } from "@/features/requests/model/RequestModel";
 import { ImageZoomModal } from "@/shared-components/ImageZoomModal/ImageZoomModal";
@@ -12,6 +13,7 @@ import { PostDetailComments } from "./PostDetail/PostDetailComments";
 import { PostDetailBottomGrid } from "./PostDetail/PostDetailBottomGrid";
 
 import mainBackgroundImage from "../../../../assets/main_backgroundimage.png";
+import appLogo from "../../../../assets/logo.png";
 
 interface PostDetailStandaloneViewProps {
   r: HelpRequest;
@@ -23,6 +25,31 @@ interface PostDetailStandaloneViewProps {
 
 export function PostDetailStandaloneView({ r, onClose, otherRequests, onSelectPost, onShare }: PostDetailStandaloneViewProps) {
   const vm = usePostDetailViewModel(r);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  useEffect(() => {
+    // Trigger loading state on post change
+    setIsNavigating(true);
+    const timer = setTimeout(() => {
+      setIsNavigating(false);
+    }, 500); // 500ms artificial delay for premium feel
+    return () => clearTimeout(timer);
+  }, [r.id]);
+
+  useEffect(() => {
+    if (!isNavigating) {
+      // Scroll to the top of the container immediately after loading completes
+      setTimeout(() => {
+        if (containerRef.current) {
+          const y = containerRef.current.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 50); // Small delay to ensure DOM is fully painted
+    }
+  }, [isNavigating]);
 
   // Split other posts into sidebar (right) and bottom grid (below active post)
   const sidebarPosts = otherRequests.slice(0, 4);
@@ -33,8 +60,42 @@ export function PostDetailStandaloneView({ r, onClose, otherRequests, onSelectPo
   const safePage = Math.min(Math.max(1, vm.currentPage), totalPages);
   const bottomPosts = allBottomPosts.slice((safePage - 1) * ITEMS_PER_PAGE, safePage * ITEMS_PER_PAGE);
 
+  if (isNavigating) {
+    return (
+      <div
+        className="w-full min-h-screen pt-8 flex items-center justify-center animate-in fade-in duration-300 bg-cover bg-center bg-fixed"
+        style={{ backgroundImage: `url(${mainBackgroundImage})` }}
+      >
+        <div className="flex flex-col items-center gap-8 animate-in slide-in-from-bottom-4 fade-in duration-700">
+          <div className="relative w-28 h-28 flex items-center justify-center">
+            {/* Outer spinning ring */}
+            <div className="absolute inset-0 rounded-full border-[4px] border-[color:var(--bamboo)]/20"></div>
+            <div className="absolute inset-0 rounded-full border-[4px] border-[color:var(--bamboo)] border-t-transparent animate-spin"></div>
+            
+            {/* Inner pulsing logo */}
+            <div className="absolute inset-2 bg-white rounded-full p-4 shadow-sm overflow-hidden flex items-center justify-center">
+              <img src={appLogo} alt="Loading Logo" className="w-full h-full object-cover animate-pulse" />
+            </div>
+          </div>
+          
+          <div className="flex flex-col items-center gap-3 bg-white/70 px-6 py-3 rounded-2xl backdrop-blur-md border border-[color:var(--bamboo)]/10 shadow-sm">
+            <div className="flex items-center gap-1.5 text-[color:var(--bamboo-deep)]">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] animate-pulse">Loading Post</span>
+              <span className="flex gap-0.5">
+                <span className="w-1 h-1 rounded-full bg-[color:var(--bamboo)] animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                <span className="w-1 h-1 rounded-full bg-[color:var(--bamboo)] animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                <span className="w-1 h-1 rounded-full bg-[color:var(--bamboo)] animate-bounce" style={{ animationDelay: '300ms' }}></span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
+      ref={containerRef}
       className="w-full min-h-screen pt-8 animate-in fade-in duration-300 bg-cover bg-center bg-fixed"
       style={{ backgroundImage: `url(${mainBackgroundImage})` }}
     >
