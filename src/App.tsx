@@ -108,6 +108,7 @@ export default function App() {
       setShowCopied(true);
       setTimeout(() => setShowCopied(false), 3000);
     });
+    navigate(`/post/${postId}`);
   };
 
   const handlePostSubmit = (input: any) => {
