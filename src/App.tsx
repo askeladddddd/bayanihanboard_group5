@@ -162,6 +162,8 @@ export default function App() {
         activeFeature={activeFeature}
         setActiveFeature={setActiveFeature}
         onOpenCreateModal={() => setCreateModalOpen(true)}
+        language={language}
+        onToggleLanguage={toggleLanguage}
       />
 
       <div className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? 'lg:pl-72' : ''}`}>
