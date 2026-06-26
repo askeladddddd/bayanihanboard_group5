@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Send, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { HelpRequest } from "@/features/requests/model/RequestModel";
+
+const REPLIES_PER_PAGE = 3;
 
 interface Props {
   r: HelpRequest;
@@ -32,6 +35,7 @@ export function FeedCardComments({
   setHelperPage
 }: Props) {
   const { t } = useLanguage();
+  const [replyPages, setReplyPages] = useState<Record<string, number>>({});
 
   return (
     <div className="border-t border-stone-200/50 bg-[#fdfbf7] p-5 relative z-10 driver-comments" onClick={(e) => e.stopPropagation()}>
@@ -56,6 +60,10 @@ export function FeedCardComments({
                   const displayContribution = shouldTruncateComment && !isCommentExpanded
                     ? translatedContribution.slice(0, 120) + "..."
                     : translatedContribution;
+                  const totalReplyPages = Math.max(1, Math.ceil((c.replies?.length ?? 0) / REPLIES_PER_PAGE));
+                  const currentReplyPage = Math.min(replyPages[c.id] ?? 1, totalReplyPages);
+                  const visibleReplies = (c.replies ?? []).slice(0, currentReplyPage * REPLIES_PER_PAGE);
+                  const hasMoreReplies = (c.replies?.length ?? 0) > visibleReplies.length;
 
                   return (
                     <div key={idx} className="flex flex-col gap-2">
@@ -94,9 +102,9 @@ export function FeedCardComments({
                       </div>
                       
                       {/* Replies Display */}
-                      {c.replies && c.replies.length > 0 && (
+                      {visibleReplies.length > 0 && (
                         <div className="ml-12 mt-1 flex flex-col gap-3 border-l-2 border-stone-100 pl-4">
-                          {c.replies.map(rep => (
+                          {visibleReplies.map(rep => (
                             <div key={rep.id} className="flex gap-2.5">
                               <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-stone-200 text-stone-600 text-xs font-bold">
                                 {rep.authorName.charAt(0).toUpperCase()}
@@ -109,6 +117,20 @@ export function FeedCardComments({
                               </div>
                             </div>
                           ))}
+                          {hasMoreReplies && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setReplyPages((prev) => ({
+                                  ...prev,
+                                  [c.id]: currentReplyPage + 1
+                                }));
+                              }}
+                              className="self-start text-xs font-bold text-[color:var(--bamboo-deep)] hover:underline transition-colors"
+                            >
+                              See More Replies
+                            </button>
+                          )}
                         </div>
                       )}
 

@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Send } from "lucide-react";
 import type { Commitment } from "@/features/requests/model/RequestModel";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const COMMENTS_PER_PAGE = 2;
+const REPLIES_PER_PAGE = 3;
 
 interface Props {
+  requestId: string;
   commitments: Commitment[];
   commentsPage: number;
   setCommentsPage: (page: number) => void;
@@ -19,6 +21,7 @@ interface Props {
 }
 
 export function PostDetailComments({
+  requestId,
   commitments,
   commentsPage,
   setCommentsPage,
@@ -31,6 +34,11 @@ export function PostDetailComments({
   onSubmitReply,
 }: Props) {
   const { t } = useLanguage();
+  const [replyPages, setReplyPages] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    setReplyPages({});
+  }, [requestId]);
 
   const totalPages = Math.ceil(commitments.length / COMMENTS_PER_PAGE);
   const safePage = Math.min(commentsPage, totalPages || 1);
@@ -81,9 +89,17 @@ export function PostDetailComments({
                 </div>
 
                 {/* Replies */}
-                {c.replies && c.replies.length > 0 && (
+                {(() => {
+                  const totalReplyPages = Math.max(1, Math.ceil((c.replies?.length ?? 0) / REPLIES_PER_PAGE));
+                  const currentReplyPage = Math.min(replyPages[c.id] ?? 1, totalReplyPages);
+                  const visibleReplies = (c.replies ?? []).slice(0, currentReplyPage * REPLIES_PER_PAGE);
+                  const hasMoreReplies = (c.replies?.length ?? 0) > visibleReplies.length;
+
+                  if (visibleReplies.length === 0) return null;
+
+                  return (
                   <div className="ml-12 mt-1 flex flex-col gap-3 border-l-2 border-stone-100 pl-4">
-                    {c.replies.map(rep => (
+                    {visibleReplies.map(rep => (
                       <div key={rep.id} className="flex gap-2.5">
                         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-stone-200 text-stone-600 text-xs font-bold">
                           {rep.authorName.charAt(0).toUpperCase()}
@@ -96,8 +112,23 @@ export function PostDetailComments({
                         </div>
                       </div>
                     ))}
+                    {hasMoreReplies && (
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          setReplyPages(prev => ({
+                            ...prev,
+                            [c.id]: currentReplyPage + 1
+                          }));
+                        }}
+                        className="self-start text-xs font-bold text-[color:var(--bamboo-deep)] hover:underline transition-colors"
+                      >
+                        See More Replies
+                      </button>
+                    )}
                   </div>
-                )}
+                  );
+                })()}
 
                 {/* Reply Form */}
                 {replyingToId === c.id && (

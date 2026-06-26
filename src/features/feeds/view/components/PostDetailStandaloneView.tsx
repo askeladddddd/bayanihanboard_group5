@@ -148,6 +148,7 @@ export function PostDetailStandaloneView({ r, onClose, otherRequests, onSelectPo
               />
 
               <PostDetailComments
+                requestId={r.id}
                 commitments={r.commitments}
                 commentsPage={vm.commentsPage}
                 setCommentsPage={vm.setCommentsPage}
